@@ -1,17 +1,16 @@
-# Definir o tamanho da janela
-# Largura de 640 pixels
-WIDTH = 640
-# Altura de 480 pixels
-HEIGHT = 480
 
-# Nome da Janela
-TITLE = "Jogo de Plataforma"
+TILE_SIZE = 64
+ROWS = 30
+COLS = 15
 
-# Criando o nosso herói
+# Definir o tamanho e nome da janela
+WIDTH = TILE_SIZE * ROWS # Largura X
+HEIGHT = TILE_SIZE * COLS # Altura Y
+TITLE = "Jogo de Plataforma" # Nome da Janela
+
+# Criando e posicionando nosso herói
 hero = Actor("hero")
-
-# Posicionando o herói no centro da tela
-hero.pos = WIDTH / 2 , HEIGHT / 2
+hero.pos = WIDTH / 2 , HEIGHT / 2 # Centro da Tela
 
 # Desenhar elementos na tela
 def draw():
@@ -21,3 +20,6 @@ def draw():
     screen.fill("skyblue")
     # Desenhar o herói
     hero.draw()
+
+def update():
+    pass
