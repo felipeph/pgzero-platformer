@@ -18,13 +18,26 @@ def build(filename, tile_size):
     with open(filename, "r") as f:
         # Extraindo o conteúdo e quebrando linhas
         contents = f.read().splitlines()
+    
+    # Quebrando as linhas
+    contents = [c.split(",") for c in contents]
+    
+    # Percorrendo cada uma das linhas entre as disponíveis
+    for row in range(len(contents)):
+        # Percorrendo cada coluna dessa linha
+        for col in range(len(contents[0])):
+            # Extrair o elemento de cada linha e coluna
+            val = contents[row][col]
+            # Testar se o valor na posição é valido
+            if val.isdigit() or (val[0] == "-" and val[1:].isdigit()):
+                contents[row][col] = int(val)
+                print(val)
+
     return contents
+
 
 # Lendo o arquivo das plataformas
 platforms = build("mapa_plataformas.csv", TILE_SIZE)
-
-# Imprimir o conteúdo das plataformas
-print(platforms)
 
 # Desenhar elementos na tela
 def draw():
