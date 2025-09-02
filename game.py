@@ -70,7 +70,35 @@ platforms = build("mapa_plataformas.csv", TILE_SIZE)
 obstacles = build("mapa_obstaculos.csv", TILE_SIZE)
 
 # ----------------- FUNÇÕES DE COLISÃO -----------------------
-# Função de colisão com plataformas
+
+# Função de colisão horizontal com plataformas
+def collision_platform_x():
+
+    # Estados iniciais
+    platform_left = False # Não encosta na esquerda da plataforma
+    platform_right = False # Não enconsta a direita da plataforma
+
+    # Olhando cada tile em cada plataforma
+    for tile in platforms:
+        # Se o herói colidir com um tile
+        if hero.colliderect(tile):
+            # Se herói indo para a esquerda
+            if hero.vx < 0:
+                # Colocar o herói colado na plataforma
+                hero.left = tile.right
+                # Encostou na esquerda da plataforma
+                platform_left = True
+            # Se o herói está indo para a direita
+            elif hero.vx > 0:
+                # Colar o heroi na plataforma
+                hero.right = tile.left 
+                # Encostou na direita da plataforma
+                platform_right = True
+    return platform_left, platform_right
+
+
+
+# Função de colisão vertical com plataformas
 def collision_platform_y():
 
     # Definindo o estado da colisão como falso
@@ -141,6 +169,7 @@ def update():
             # Muda instantaneamente a velocidade vertical para o pulo
             hero.vy = JUMP_FORCE   
     
+    
     # Resetando a velocidade horizontal
     hero.vx = 0
 
@@ -156,5 +185,8 @@ def update():
     # Atualizando a posição horizontal do herói
     hero.x = hero.x + hero.vx
 
-        
+    # Verificar colisões pela esquerda e direita
+    platform_left, platform_right = collision_platform_x()
+
+
 
