@@ -41,7 +41,7 @@ def recortar_personagem(caminho_imagem_entrada, caminho_imagem_saida):
 
 # --- EXECUÇÃO DO SCRIPT ---
 
-# Nome do arquivo de imagem que você me enviou
+# Nome do arquivo de imagem original
 arquivo_de_entrada = 'hero.png'
 
 # Nome que o arquivo final terá
