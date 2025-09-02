@@ -31,13 +31,29 @@ def build(filename, tile_size):
             # Testar se o valor na posição é valido
             if val.isdigit() or (val[0] == "-" and val[1:].isdigit()):
                 contents[row][col] = int(val)
-                print(val)
+    
+    # Criação dos itens que serão construidos
+    items = []
 
-    return contents
+    # Caminhando pelas linhas
+    for row in range(len(contents)):
+        # Caminhando pelas colunas
+        for col in range(len(contents[0])):
+            # Extraindo o elemento da posição
+            tile_num = contents[row][col]
+            # Verificar se o espaço não é vazio
+            if tile_num != -1:
+                # Criação dos Actors
+                item = Actor(f"tiles/tile_{tile_num:04d}")
+                # Posicionar os Actors
+                item.topleft = (tile_size * col, tile_size * row)
+                # Reunindo todos os itens
+                items.append(item)
+    return items
 
-
-# Lendo o arquivo das plataformas
+# Lendo os arquivos das plataformas e obstáculos
 platforms = build("mapa_plataformas.csv", TILE_SIZE)
+obstacles = build("mapa_obstaculos.csv", TILE_SIZE)
 
 # Desenhar elementos na tela
 def draw():
@@ -47,6 +63,14 @@ def draw():
     screen.fill("skyblue")
     # Desenhar o herói
     hero.draw()
+    # Desenhar cada elemento de plataforma na tela
+    for platform in platforms:
+        platform.draw()
+    # Desenhar cada elemento dos obstáculos
+    for obstacle in obstacles:
+        obstacle.draw()
+    
+
 
 # Atualizar cada frame
 def update():
