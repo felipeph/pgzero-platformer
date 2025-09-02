@@ -1,2 +1,0 @@
-Esse é um teste de branch
-Teste de pull requests
