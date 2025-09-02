@@ -76,8 +76,6 @@ def collision_platform_y():
     # Definindo o estado da colisão como falso
     platform_under = False # Não está acima da plataforma
     platform_over = False # Não está abaixo da plataforma
-    platform_left = False # Não está abaixo da plataforma
-    platform_right = False # Não está abaixo da plataforma
 
     # Olhar em cada tile de cada a plataforma
     for tile in platforms:
@@ -101,17 +99,10 @@ def collision_platform_y():
                 # Fazer ele começar a cair
                 hero.vy = 0
                 platform_over = True
-            
-            elif hero.vx > 0:
-                hero.right = tile.left
-                hero.vx = 0
-                platform_left = True
-            elif hero.vx < 0:
-                hero.left = tile.right
-                hero.vx = 0
-                platform_right = True
 
-    return platform_under, platform_over, platform_left, platform_right
+    return platform_under, platform_over
+
+
 # ------------------------------------------------------------
     
 
@@ -141,7 +132,7 @@ def update():
     hero.y = hero.y + hero.vy # Posição vertical atual mais velocidade vertical
     
     # Verificar colisão por cima ou por baixo da plataforma
-    platform_under, platform_over, platform_left, platform_right = collision_platform_y()
+    platform_under, platform_over = collision_platform_y()
 
     # Se o usuário teclar a barra de espaço
     if keyboard.space:
@@ -156,17 +147,11 @@ def update():
     # Verificar o toque nas teclas de seta
     # Pressionando a tecla esquerda do teclado
     if keyboard.left:
-        if platform_left:
-            hero.vx = 0
-        else: 
-            hero.vx = -X_SPEED # Velocidade para esquerda é negativa
+        hero.vx = -X_SPEED # Velocidade para esquerda é negativa
     
     # Pressionando a tecla direita do teclado
     if keyboard.right:
-        if platform_right:
-            hero.vx = 0
-        else:
-            hero.vx = X_SPEED # Velocidade para direita positiva
+        hero.vx = X_SPEED # Velocidade para direita positiva
     
     # Atualizando a posição horizontal do herói
     hero.x = hero.x + hero.vx
