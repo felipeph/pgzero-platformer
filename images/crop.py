@@ -44,7 +44,7 @@ def recortar_personagem(caminho_imagem_entrada, caminho_imagem_saida):
 # for i in range(3):
     
 #     # Nome do arquivo de imagem original
-arquivo_de_entrada = 'hero_walk_1.png'
+arquivo_de_entrada = 'slime_fire_walk_left_1.png'
 
     # Nome que o arquivo final terá
 arquivo_de_saida = arquivo_de_entrada

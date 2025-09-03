@@ -321,9 +321,11 @@ def draw():
     # Desenhar o herói
     hero.draw()
 
-    # Desenhando os inimigos ##############################
-    for enemy in enemies_list: #############################
-        enemy.draw() ####################################
+    # Desenhando os inimigos 
+    # Para cada inimigo na lista de inimigos
+    for enemy in enemies_list: 
+        # Desenha o inimigo na tela
+        enemy.draw() 
 
 
 # ---------- FIM DESENHANDO ELEMENTOS NA TELA -----------------------------
