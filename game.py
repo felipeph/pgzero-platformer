@@ -15,12 +15,16 @@ X_SPEED_START = 0 # Velocidade X inicial
 JUMP_FORCE = -15 # Força do pulo
 X_SPEED = 5 # Velocidade horizontal do herói.
 
+
 # Criando e posicionando nosso herói
 hero_start_position = TILE_SIZE, HEIGHT / 2
-hero = Actor("hero")
+hero = Actor("hero_idle_1")
 hero.pos = hero_start_position
 hero.vy = Y_SPEED_START # Definindo a velocidade vertical
 hero.vx = X_SPEED_START # Definindo a velocidade horizontal
+hero_height_start = hero.height
+
+
 
 #---------------  FUNÇÃO DE CONSTRUÇÃO DA FASE ---------------------
 # Construir os elementos antes de desenhar
@@ -132,7 +136,131 @@ def collision_platform_y():
 
 
 # ------------------------------------------------------------
-    
+
+
+# ---------- ANIMACÕES -----------------------------------
+# Animação de respiração parado
+# def idle_animation(actor, animation_time):
+#     actor_idle_images = [f'{actor}_idle_[i]']
+
+#     for i in range(3):
+#         actor_idle_images.append(f'{actor}_idle_[i]')
+
+#     hero.image = hero_idle_[i]
+#     pass
+
+
+# def animation_images_list(actor, animation, list_size):
+#     images_list=[]
+#     for i in range(list_size):
+#         images_list.append(f'{actor}_{animation}_{i}')
+#     print(images_list)
+#     return images_list
+
+# # def images_hero_idle_list():
+# #     list = animation_images_list('hero','idle', 3 )
+# #     print(list)
+
+# hero_idle_images = animation_images_list('hero', 'idle', 3)
+
+# def actor_idle_animation(actor):
+#     image_name = actor.image
+#     # print(image_name)
+#     actor_name, animation_name, animation_position = image_name.split('_')
+#     # print(actor_name, animation_name, animation_position)
+#     animation_position = int(animation_position)
+#     # print(animation_position)
+
+#     # while animation_position > 0:
+#     #     animation_position = animation_position - 1
+#     #     actor.image = f'{str(actor_name)}_{str(animation_name)}_{str(animation_position)}'
+
+#     if animation_position == 0:
+#         animation_position = 3
+#         actor.image = f'{str(actor_name)}_{str(animation_name)}_{str(animation_position)}'
+#     elif animation_position == 3:
+#         animation_position = 2
+#         actor.image = f'{str(actor_name)}_{str(animation_name)}_{str(animation_position)}'
+#     elif animation_position == 2:
+#         animation_position = 1
+#         actor.image = f'{str(actor_name)}_{str(animation_name)}_{str(animation_position)}'
+#     elif animation_position == 1:
+#         animation_position = 0
+#         actor.image = f'{str(actor_name)}_{str(animation_name)}_{str(animation_position)}'
+
+
+#     print(animation_position)
+    # if list_position == 0:
+    #     hero.image = 
+    # pass
+
+# clock.schedule_interval(images_hero_idle_list, 1)
+
+
+
+# ---------- ANIMACÕES -----------------------------------
+
+# 1. Crie a lista de imagens para a animação idle (parado).
+#    Certifique-se que você tem os arquivos de imagem correspondentes na pasta 'images'.
+#    Ex: hero_idle_0.png, hero_idle_1.png, hero_idle_2.png
+hero_idle_images = ['hero_idle_0', 'hero_idle_1', 'hero_idle_2', 'hero_idle_3']
+
+# 2. Crie uma variável para guardar o quadro (frame) atual da animação.
+hero_idle_frame = 0
+
+# 3. Crie a função que será chamada pelo temporizador para animar o herói.
+def animate_hero_idle():
+    # Usamos 'global' para poder modificar a variável que está fora da função.
+    global hero_idle_frame
+
+    # A animação só deve acontecer se o herói estiver realmente parado.
+    if hero.vx == 0 and hero.vy == 0:
+        # Avança para o próximo quadro da animação
+        # O operador '%' (módulo) faz com que a contagem volte a 0 quando chegar ao fim da lista.
+        hero_idle_frame = (hero_idle_frame + 1) % len(hero_idle_images)
+        
+        # Atualiza a imagem do herói para a imagem do quadro atual.
+        hero.image = hero_idle_images[hero_idle_frame]
+
+# 4. Agende a função de animação para ser executada a cada 0.2 segundos.
+#    Você pode aumentar ou diminuir este valor para deixar a animação mais lenta ou mais rápida.
+clock.schedule_interval(animate_hero_idle, 1)
+
+
+
+hero_walk_right_images = ['hero_walk_right_0', 'hero_walk_right_1']
+
+hero_walk_left_images = ['hero_walk_left_0', 'hero_walk_left_1']
+
+
+# 2. Crie uma variável para guardar o quadro (frame) atual da animação.
+hero_walk_frame = 0
+
+# 3. Crie a função que será chamada pelo temporizador para animar o herói.
+def animate_hero_walk():
+    # Usamos 'global' para poder modificar a variável que está fora da função.
+    global hero_walk_frame
+
+    # A animação só deve acontecer se o herói estiver realmente parado.
+    if hero.vy == 0 and hero.vx > 0:
+        # Avança para o próximo quadro da animação
+        # O operador '%' (módulo) faz com que a contagem volte a 0 quando chegar ao fim da lista.
+        hero_walk_frame = (hero_walk_frame + 1) % len(hero_walk_right_images)
+        
+        # Atualiza a imagem do herói para a imagem do quadro atual.
+        hero.image = hero_walk_right_images[hero_walk_frame]
+    elif hero.vy == 0 and hero.vx < 0:
+        # Avança para o próximo quadro da animação
+        # O operador '%' (módulo) faz com que a contagem volte a 0 quando chegar ao fim da lista.
+        hero_walk_frame = (hero_walk_frame + 1) % len(hero_walk_left_images)
+        
+        # Atualiza a imagem do herói para a imagem do quadro atual.
+        hero.image = hero_walk_left_images[hero_walk_frame]
+
+# 4. Agende a função de animação para ser executada a cada 0.2 segundos.
+#    Você pode aumentar ou diminuir este valor para deixar a animação mais lenta ou mais rápida.
+clock.schedule_interval(animate_hero_walk, 0.1)
+
 
 # Desenhar elementos na tela
 def draw():
@@ -153,6 +281,7 @@ def draw():
 
 # Atualizar cada frame
 def update():
+
     # Definir a velocidade vertical com a gravidade
     hero.vy = hero.vy + GRAVITY # Velocidade vertical atual mais gravidade
 
@@ -163,13 +292,30 @@ def update():
     platform_under, platform_over = collision_platform_y()
 
     # Se o usuário teclar a barra de espaço
+    # if keyboard.space:
+    #     # Permitir pulo apenas se estiver sobre plataforma
+    #     if platform_under:
+    #         # Muda instantaneamente a velocidade vertical para o pulo
+    #         hero.vy = JUMP_FORCE   
+    #         if hero.vx > 0:
+    #             hero.image = 'hero_jump_right'
+    #         else:
+    #             hero.image = 'hero_jump_left'
+
     if keyboard.space:
-        # Permitir pulo apenas se estiver sobre plataforma
         if platform_under:
-            # Muda instantaneamente a velocidade vertical para o pulo
-            hero.vy = JUMP_FORCE   
+            hero.vy = JUMP_FORCE
+
+
+    # if keyboard.space and platform_under and keyboard.left:
+    #     hero.vy = JUMP_FORCE
+    #     hero.image = 'hero_jump_left'
     
-    
+    # if keyboard.space and platform_under and keyboard.right:
+    #     hero.vy = JUMP_FORCE
+    #     hero.image = 'hero_jump_right'
+
+
     # Resetando a velocidade horizontal
     hero.vx = 0
 
@@ -187,6 +333,3 @@ def update():
 
     # Verificar colisões pela esquerda e direita
     platform_left, platform_right = collision_platform_x()
-
-
-
