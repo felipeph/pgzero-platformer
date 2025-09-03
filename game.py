@@ -22,20 +22,61 @@ X_SPEED = 5 # Velocidade horizontal do herói.
 HERO_IDLE_SPEED = 0.1
 HERO_WALK_SPEED = 0.1
 
+
+# Constantes de posição inicial
+HERO_START_POSITION = TILE_SIZE, HEIGHT / 2 
+
 # --------------------------------------------------------
 
 
 # ----------- CRIAÇÃO DO HEROI ---------------------------
 
 # Criando e posicionando nosso herói
-hero_start_position = TILE_SIZE, HEIGHT / 2
 hero = Actor("hero_idle_1")
-hero.pos = hero_start_position
+hero.pos = HERO_START_POSITION
 hero.vy = Y_SPEED_START # Definindo a velocidade vertical
 hero.vx = X_SPEED_START # Definindo a velocidade horizontal
-hero_height_start = hero.height
 
 # --------------------------------------------------------
+
+
+
+# ----------- CRIAÇÃO DOS INIMIGOS -------------------------
+
+# Lista de inimigos inicialmente vazia
+enemies_list = []
+
+# Função de criar inimigos com base no nome e posição
+def create_enemy(enemy_name, enemy_tile_left, enemy_tile_bottom):
+    
+    # Inicialmente cria um actor para o arquivo de imagem
+    enemy = Actor(f'{enemy_name}_0')
+    
+    # Posiciona o inimigo no local desejado
+    enemy.bottom = enemy_tile_bottom * TILE_SIZE
+    enemy.left = enemy_tile_left * TILE_SIZE
+
+    # Insere o inimigo na lista de inimigos
+    enemies_list.append(enemy)
+
+# Criando um inimigo tipo bernacle
+create_enemy('barnacle_attack', 10, 11)
+
+# Criando outro inimigo tipo bernacle
+create_enemy('barnacle_attack', 18, 10)
+
+# Criando um inimigo tipo slime de fogo
+create_enemy('slime_fire_walk_left', 24, 4)
+
+# Criando um inimigo tipo abelha
+create_enemy('bee_left', 11, 2)
+
+
+# ----------- FIM CRIAÇÃO DOS INIMIGOS -------------------------
+
+
+
+
 
 
 
@@ -280,6 +321,11 @@ def draw():
     # Desenhar o herói
     hero.draw()
 
+    # Desenhando os inimigos ##############################
+    for enemy in enemies_list: #############################
+        enemy.draw() ####################################
+
+
 # ---------- FIM DESENHANDO ELEMENTOS NA TELA -----------------------------
 
     
@@ -350,8 +396,23 @@ def update():
         # Se a colisão ocorrer
         if hero.colliderect(obstacle):
             # Herói volta para o início do jogo
-            hero.pos = hero_start_position
+            hero.pos = HERO_START_POSITION
             # Para o loop depois da colisão
             break
         
 # ---------------- FIM COLISAO COM OBSTACULOS (MORTE) -----------------------
+
+
+# ---------------- COLISAO COM INIMIGOS (MORTE) ---------------------------
+
+    # Caminha por todos os inimigos verificando a colisão
+    for enemy in enemies_list:
+        # Se a colisão ocorrer
+        if hero.colliderect(enemy):
+            # Herói volta para o início do jogo
+            hero.pos = HERO_START_POSITION
+            # Para o loop depois da colisão
+            break
+        
+# ---------------- FIM COLISAO COM INIMIGOS (MORTE) -----------------------
+
