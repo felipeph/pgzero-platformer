@@ -338,3 +338,20 @@ def update():
     platform_left, platform_right = collision_platform_x()
 
 # ---------------- FIM CAMINHADA DO HEROI -----------------------------------
+
+
+
+
+
+# ---------------- COLISAO COM OBSTACULOS (MORTE) ---------------------------
+
+    # Caminha por todos os obstáculos verificando a colisão
+    for obstacle in obstacles:
+        # Se a colisão ocorrer
+        if hero.colliderect(obstacle):
+            # Herói volta para o início do jogo
+            hero.pos = hero_start_position
+            # Para o loop depois da colisão
+            break
+        
+# ---------------- FIM COLISAO COM OBSTACULOS (MORTE) -----------------------
