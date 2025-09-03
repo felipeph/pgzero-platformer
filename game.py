@@ -21,7 +21,7 @@ X_SPEED = 5 # Velocidade horizontal do herói.
 # Constantes de animação
 HERO_IDLE_SPEED = 0.1
 HERO_WALK_SPEED = 0.1
-
+BARNACLE_ATTACK_SPEED = 0.2
 
 # Constantes de posição inicial
 HERO_START_POSITION = TILE_SIZE, HEIGHT / 2 
@@ -46,6 +46,7 @@ hero.vx = X_SPEED_START # Definindo a velocidade horizontal
 # Lista de inimigos inicialmente vazia
 enemies_list = []
 
+
 # Função de criar inimigos com base no nome e posição
 def create_enemy(enemy_name, enemy_tile_left, enemy_tile_bottom):
     
@@ -56,20 +57,23 @@ def create_enemy(enemy_name, enemy_tile_left, enemy_tile_bottom):
     enemy.bottom = enemy_tile_bottom * TILE_SIZE
     enemy.left = enemy_tile_left * TILE_SIZE
 
+    # Adiciona um atributo para controlar o frame individual da animação
+    enemy.frame = 0
+
     # Insere o inimigo na lista de inimigos
     enemies_list.append(enemy)
 
-# Criando um inimigo tipo bernacle
+# Criando um inimigo tipo barnacle
 create_enemy('barnacle_attack', 10, 11)
 
-# Criando outro inimigo tipo bernacle
+# Criando outro inimigo tipo barnacle
 create_enemy('barnacle_attack', 18, 10)
 
 # Criando um inimigo tipo slime de fogo
-create_enemy('slime_fire_walk_left', 24, 4)
+create_enemy('slimefire_walkleft', 24, 4)
 
 # Criando um inimigo tipo abelha
-create_enemy('bee_left', 11, 2)
+create_enemy('bee_walkleft', 11, 2)
 
 
 # ----------- FIM CRIAÇÃO DOS INIMIGOS -------------------------
@@ -227,7 +231,8 @@ hero_walk_right_images = animation_images_list('hero', 'walk_right', 2)
 # Lista de imagens da animação de caminhar para esquerda do hero
 hero_walk_left_images = animation_images_list('hero', 'walk_left', 2)
 
-
+# Lista de imagens da animação de ataque do barnacle
+barnacle_attack_images = animation_images_list('barnacle', 'attack', 4)
 # ----------------------------------------------------------------
 
 
@@ -297,6 +302,88 @@ def animate_hero_walk():
 clock.schedule_interval(animate_hero_walk, HERO_WALK_SPEED)
 
 # ---------- FIM ANIMAÇÃO DE CAMINHADA DO HERO ---------------------------
+
+
+
+
+
+
+
+
+
+# ---------- ANIMAÇÃO ATAQUE DO BARNACLE --------------------------------
+
+def animate_barnacle_attack():
+    # Para cada inimigo na nossa lista de inimigos
+    for enemy in enemies_list:
+        # Pega o nome do arquivo da imagem atual do inimigo
+        enemy_filename = str(enemy.image)
+
+        # Verifica se o inimigo é um 'barnacle'
+        if enemy_filename.startswith('barnacle'):
+            
+            # 1. GUARDA a posição atual da base do inimigo
+            original_bottom = enemy.bottom
+            
+            # 2. Avança para o próximo quadro da animação
+            enemy.frame = (enemy.frame + 1) % len(barnacle_attack_images)
+            
+            # 3. Atualiza a imagem (o que pode mover a base)
+            enemy.image = barnacle_attack_images[enemy.frame]
+            
+            # 4. RESTAURA a posição da base, garantindo que ela não se mova
+            enemy.bottom = original_bottom
+
+# Agenda a execução da animação em um dado intervalo de tempo (segundos)
+clock.schedule_interval(animate_barnacle_attack, BARNACLE_ATTACK_SPEED)
+
+# ---------- FIM ANIMAÇÃO ATAQUE DO BARNACLE --------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
