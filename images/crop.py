@@ -41,11 +41,13 @@ def recortar_personagem(caminho_imagem_entrada, caminho_imagem_saida):
 
 # --- EXECUÇÃO DO SCRIPT ---
 
-# Nome do arquivo de imagem original
-arquivo_de_entrada = 'hero.png'
+# for i in range(3):
+    
+#     # Nome do arquivo de imagem original
+arquivo_de_entrada = 'hero_walk_1.png'
 
-# Nome que o arquivo final terá
-arquivo_de_saida = 'hero_cropped.png'
+    # Nome que o arquivo final terá
+arquivo_de_saida = arquivo_de_entrada
 
-# Chama a função para executar a tarefa
+    # Chama a função para executar a tarefa
 recortar_personagem(arquivo_de_entrada, arquivo_de_saida)
