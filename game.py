@@ -337,45 +337,6 @@ def animate_barnacle_attack():
 # Agenda a execução da animação em um dado intervalo de tempo (segundos)
 clock.schedule_interval(animate_barnacle_attack, BARNACLE_ATTACK_SPEED)
 
-# ---------- FIM ANIMAÇÃO ATAQUE DO BARNACLE --------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

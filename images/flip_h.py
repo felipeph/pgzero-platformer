@@ -19,4 +19,4 @@ def flip_h(input_filename, output_filename):
     except Exception as e:
         print(f"Ocorreu um erro: {e}")
 
-flip_h('hero_walk_right_1.png', 'hero_walk_left_1.png')
+flip_h('slimefire_walkleft_1.png', 'slimefire_walkright_1.png')
