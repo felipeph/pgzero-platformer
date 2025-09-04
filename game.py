@@ -34,6 +34,10 @@ SLIMEFIRE_TILES_MIN = 18 * TILE_SIZE
 SLIMEFIRE_TILES_MAX = 26 * TILE_SIZE
 SLIMEFIRE_ANIMATION_SPEED = 0.1 
 
+# Constantes do objetivo
+GOAL_ANIMATION_SPEED = 0.1
+GOAL_POSITION = (2 * TILE_SIZE, 5 * TILE_SIZE)
+
 
 
 # Constantes de posição inicial
@@ -51,6 +55,12 @@ hero.vy = Y_SPEED_START # Definindo a velocidade vertical
 hero.vx = X_SPEED_START # Definindo a velocidade horizontal
 
 # --------------------------------------------------------
+
+# Criando o Actor da bandeira
+goal = Actor('goal_animation_0')
+# Posicionando o objetivo na posição definida
+goal.left, goal.bottom = GOAL_POSITION
+goal.frame = 0
 
 
 
@@ -270,6 +280,8 @@ slimefire_walk_right_images = animation_images_list('slimefire', 'walkright', 2)
 # Lista de imagens da animação de caminhar para esquerda do slimefire
 slimefire_walk_left_images = animation_images_list('slimefire', 'walkleft', 2)
 
+# Criando a lista de animações do objetivo
+goal_images = animation_images_list('goal', 'animation', 2)
 
 # ----------------------------------------------------------------
 
@@ -376,6 +388,36 @@ def animate_barnacle_attack():
 clock.schedule_interval(animate_barnacle_attack, BARNACLE_ATTACK_SPEED)
 
 # ---------- FIM ANIMAÇÃO ATAQUE DO BARNACLE --------------------------------
+
+
+
+
+
+# ---------- ANIMAÇÃO DO OBJETIVO --------------------------------
+
+def animate_goal():
+    # Avançar para o próximo frame da animação
+    goal.frame = (goal.frame + 1) % len(goal_images)
+
+    # Trocar as imagens do actor
+    goal.image = goal_images[goal.frame]
+
+# Agenda a execução da animação em um dado intervalo de tempo (segundos)
+clock.schedule_interval(animate_goal, GOAL_ANIMATION_SPEED)
+
+# ---------- FIM ANIMAÇÃO DO OBJETIVO --------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -550,6 +592,9 @@ def draw():
     # Desenhar o herói
     hero.draw()
 
+    # Desenhando o objetivo
+    goal.draw()
+
     # Desenhando os inimigos 
     # Para cada inimigo na lista de inimigos
     for enemy in enemies_list: 
@@ -665,5 +710,7 @@ def update():
         hero.right = WIDTH
 
 # ---------------- FIM COLISAO COM BORDAS LATERAIS DA TELA ------------------
+
+
 
 
