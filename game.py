@@ -713,4 +713,5 @@ def update():
 
 
 
-
+    if hero.colliderect(goal):
+        hero.pos = HERO_START_POSITION
