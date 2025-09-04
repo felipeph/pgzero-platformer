@@ -21,7 +21,20 @@ X_SPEED = 5 # Velocidade horizontal do herói.
 # Constantes de animação
 HERO_IDLE_SPEED = 0.1
 HERO_WALK_SPEED = 0.1
+
 BARNACLE_ATTACK_SPEED = 0.2
+
+BEE_WALK_SPEED = 5
+BEE_WALK_ANIMATION_SPEED = 0.1 
+BEE_ANIMATION_SPEED = 0.1 
+
+SLIMEFIRE_WALK_SPEED = 5
+SLIMEFIRE_WALK_ANIMATION_SPEED = 0.1 
+SLIMEFIRE_TILES_MIN = 18 * TILE_SIZE
+SLIMEFIRE_TILES_MAX = 26 * TILE_SIZE
+SLIMEFIRE_ANIMATION_SPEED = 0.1 
+
+
 
 # Constantes de posição inicial
 HERO_START_POSITION = TILE_SIZE, HEIGHT / 2 
@@ -48,7 +61,7 @@ enemies_list = []
 
 
 # Função de criar inimigos com base no nome e posição
-def create_enemy(enemy_name, enemy_tile_left, enemy_tile_bottom):
+def create_enemy(enemy_name, enemy_tile_left, enemy_tile_bottom, enemy_vx):
     
     # Inicialmente cria um actor para o arquivo de imagem
     enemy = Actor(f'{enemy_name}_0')
@@ -60,20 +73,30 @@ def create_enemy(enemy_name, enemy_tile_left, enemy_tile_bottom):
     # Adiciona um atributo para controlar o frame individual da animação
     enemy.frame = 0
 
+    # Colocar velocidade inicial horizontal em cada inimigo
+    enemy.vx = enemy_vx
+
+    # Capturar a posição inicial da esquerda do inimigo
+    enemy.startleft = enemy.left
+
     # Insere o inimigo na lista de inimigos
     enemies_list.append(enemy)
 
 # Criando um inimigo tipo barnacle
-create_enemy('barnacle_attack', 10, 11)
+create_enemy('barnacle_attack', 10, 11, 0)
 
 # Criando outro inimigo tipo barnacle
-create_enemy('barnacle_attack', 18, 10)
+create_enemy('barnacle_attack', 18, 10, 0)
 
 # Criando um inimigo tipo slime de fogo
-create_enemy('slimefire_walkleft', 24, 4)
+create_enemy('slimefire_walkleft', 24, 4, SLIMEFIRE_WALK_SPEED)
 
 # Criando um inimigo tipo abelha
-create_enemy('bee_walkleft', 11, 2)
+create_enemy('bee_walkleft', 0, 4, BEE_WALK_SPEED)
+create_enemy('bee_walkleft', 5, 4, BEE_WALK_SPEED)
+create_enemy('bee_walkleft', 10, 4, BEE_WALK_SPEED)
+create_enemy('bee_walkleft', 15, 4, BEE_WALK_SPEED)
+create_enemy('bee_walkleft', 25, 4, BEE_WALK_SPEED)
 
 
 # ----------- FIM CRIAÇÃO DOS INIMIGOS -------------------------
@@ -233,6 +256,21 @@ hero_walk_left_images = animation_images_list('hero', 'walk_left', 2)
 
 # Lista de imagens da animação de ataque do barnacle
 barnacle_attack_images = animation_images_list('barnacle', 'attack', 4)
+
+
+# Lista de imagens da animação de caminhar para direita do bee
+bee_walk_right_images = animation_images_list('bee', 'walkright', 2)
+
+# Lista de imagens da animação de caminhar para esquerda do bee
+bee_walk_left_images = animation_images_list('bee', 'walkleft', 2)
+
+# Lista de imagens da animação de caminhar para direita do slimefire
+slimefire_walk_right_images = animation_images_list('slimefire', 'walkright', 2)
+
+# Lista de imagens da animação de caminhar para esquerda do slimefire
+slimefire_walk_left_images = animation_images_list('slimefire', 'walkleft', 2)
+
+
 # ----------------------------------------------------------------
 
 
@@ -337,9 +375,152 @@ def animate_barnacle_attack():
 # Agenda a execução da animação em um dado intervalo de tempo (segundos)
 clock.schedule_interval(animate_barnacle_attack, BARNACLE_ATTACK_SPEED)
 
+# ---------- FIM ANIMAÇÃO ATAQUE DO BARNACLE --------------------------------
 
 
 
+
+
+###################################################################
+
+# ---------- ANIMAÇÃO DO SLIMEFIRE --------------------------------
+# Função que anima a troca de sprites do slimefire independente do movimento
+def animate_slimefire():
+
+    # Percorrendo cada inimigo na lista
+    for enemy in enemies_list:
+
+        # Resgatando o nome do inimigo
+        enemy_filename = str(enemy.image)
+
+        # Restagando a posição da base do inimigo
+        original_bottom = enemy.bottom
+
+        # Verificando se o inimigo é um "slimefire"
+        if enemy_filename.startswith('slimefire'):
+
+            # Avançar um frame na animação do inimigo
+            enemy.frame = (enemy.frame + 1) % len(slimefire_walk_left_images)
+
+            # Se o inimigo estiver andando para a direita
+            if enemy.vx > 0:
+                # Troca a imagem dele para as de caminhada para direita
+                enemy.image = slimefire_walk_left_images[enemy.frame]
+            
+            # Senão
+            else:
+                # Troca a imagem dele para as de caminhada para esquerda
+                enemy.image = slimefire_walk_right_images[enemy.frame]
+        
+        # Posiciona a base no inimigo no mesmo valor da base original
+        enemy.bottom = original_bottom
+
+clock.schedule_interval(animate_slimefire, SLIMEFIRE_ANIMATION_SPEED)
+
+# ---------- FIM ANIMAÇÃO DO SLIMEFIRE --------------------------------
+
+
+
+
+
+
+# ---------- ANIMAÇÃO DA ABELHA --------------------------------
+# Função que anima a troca de sprites da abelha independente do movimento
+def animate_bee():
+
+    # Percorrendo cada inimigo na lista
+    for enemy in enemies_list:
+
+        # Resgatando o nome do inimigo
+        enemy_filename = str(enemy.image)
+
+        # Verificando se o inimigo é um "bee"
+        if enemy_filename.startswith('bee'):
+
+            # Avançar um frame na animação do inimigo
+            enemy.frame = (enemy.frame + 1) % len(bee_walk_left_images)
+
+            # Se o inimigo estiver andando para a direita
+            if enemy.vx > 0:
+                # Troca a imagem dele para as de caminhada para direita
+                enemy.image = bee_walk_left_images[enemy.frame]
+            
+            # Senão
+            else:
+                # Troca a imagem dele para as de caminhada para esquerda
+                enemy.image = bee_walk_right_images[enemy.frame]
+        
+clock.schedule_interval(animate_bee, BEE_ANIMATION_SPEED)
+
+# ---------- FIM ANIMAÇÃO DA ABELHA --------------------------------
+
+
+
+
+# ---------- MOVIMENTO DA ABELHA --------------------------------
+
+# Função que movimenta cada abelha
+def bee_walk():
+
+    # Percorre todos os inimigos
+    for enemy in enemies_list:
+
+        # Recolhe o nome do arquivo 
+        enemy_filename = str(enemy.image)
+
+        # Verifica se o nome começa com "bee"
+        if enemy_filename.startswith('bee'):
+
+            # Desloca o inimigo para esquerda
+            enemy.x = enemy.x - enemy.vx
+            
+            # Verifica se chegou na borda da tela
+            if enemy.left < 0 or enemy.right > WIDTH:
+
+                # Inverte a velocidade do inimigo
+                enemy.vx = - enemy.vx
+
+
+# -----------FIM MOVIMENTO DA ABELHA --------------------------------
+
+
+
+
+
+# ---------- MOVIMENTO DO SLIMEFIRE --------------------------------
+
+# Função que movimenta o slimefire
+def slimefire_walk():
+
+    # Percorre a lista de todos os inimigos
+    for enemy in enemies_list:
+
+        # Resgata o nome do arquivo de imagem
+        enemy_filename = str(enemy.image)
+
+        # Verifica se o inimigo é um slimefire
+        if enemy_filename.startswith('slimefire'):
+
+            # Desloca o inimigo para a esquerda
+            enemy.x = enemy.x - enemy.vx
+            
+
+            if enemy.left < SLIMEFIRE_TILES_MIN or enemy.right > SLIMEFIRE_TILES_MAX:
+                enemy.vx = - enemy.vx
+
+
+# -----------FIM MOVIMENTO DO SLIMEFIRE --------------------------------
+
+
+
+
+
+
+
+
+
+
+##########################################################
 
 
 
@@ -385,6 +566,11 @@ def draw():
 
 def update():
 
+# ------------------- DESLOCAMENTO DOS INIMIGOS ---------------------------
+    slimefire_walk()
+    bee_walk()
+# ------------------- FIM DESLOCAMENTO DOS INIMIGOS -----------------------
+
 # ---------------- GRAVIDADE E COLISÕES VERTICAIS ----------------------
     # Definir a velocidade vertical com a gravidade
     hero.vy = hero.vy + GRAVITY # Velocidade vertical atual mais gravidade
@@ -396,7 +582,6 @@ def update():
     platform_under, platform_over = collision_platform_y()
 
 # ---------------- FIM GRAVIDADE E COLISÕES VERTICAIS --------------------
-
 
 
 # ---------------- SALTO DO HEROI ----------------------------------------
@@ -426,7 +611,7 @@ def update():
     # Pressionando a tecla direita do teclado
     if keyboard.right:
         hero.vx = X_SPEED # Velocidade para direita positiva
-    
+
     # Atualizando a posição horizontal do herói
     hero.x = hero.x + hero.vx
 
@@ -434,7 +619,6 @@ def update():
     platform_left, platform_right = collision_platform_x()
 
 # ---------------- FIM CAMINHADA DO HEROI -----------------------------------
-
 
 
 
@@ -465,4 +649,21 @@ def update():
             break
         
 # ---------------- FIM COLISAO COM INIMIGOS (MORTE) -----------------------
+
+
+
+
+# ---------------- COLISAO COM BORDAS LATERAIS DA TELA --------------------
+    # Se o herói está mais a esquerda do que zero
+    if hero.left < 0:
+        # Posiciona sua esquerda em zero para ele não cair
+        hero.left = 0
+    
+    # Se o herói está mais a direita que a largura da borda
+    if hero.right > WIDTH:
+        # Posiciona sua direita na borda da tela
+        hero.right = WIDTH
+
+# ---------------- FIM COLISAO COM BORDAS LATERAIS DA TELA ------------------
+
 
